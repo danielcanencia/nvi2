@@ -215,7 +215,7 @@ if(NOT DBOPEN_IN_LIBC)
     if(DIST STREQUAL "Debian" OR DIST STREQUAL "Ubuntu")
         # Debian's libdb5.3-dev package provides this library with a
         # version number suffix
-        target_link_libraries(nvi PRIVATE db-5.3)
+        target_link_libraries(nvi PRIVATE db1-2.2.5)
     else()
         target_link_libraries(nvi PRIVATE db1)
     endif()
@@ -230,9 +230,10 @@ if (APPLE)
     add_definitions("-DDB_H_ABS_PATH=<${DB_H_GUESS}>")
 else()
     if(DIST STREQUAL "Debian" OR DIST STREQUAL "Ubuntu")
-        # In debian and ubuntu BDB1's db.h is provided as db_185.h by libdb5.3-dev
-        find_path(DB_INCLUDE_DIR db_185.h PATH_SUFFIXES db1)
-        add_definitions("-DDB_H_ABS_PATH=<${DB_INCLUDE_DIR}/db_185.h>")
+        # In debian and ubuntu BDB1's db.h is not provided by
+        # libdb1-compat, eventhough it is not provided by it
+        find_path(DB_INCLUDE_DIR db1.h PATH_SUFFIXES db1)
+        add_definitions("-DDB_H_ABS_PATH=<${DB_INCLUDE_DIR}/db1.h>")
     else()
         find_path(DB_INCLUDE_DIR db.h PATH_SUFFIXES db1)
         target_include_directories(nvi PRIVATE ${DB_INCLUDE_DIR})
